@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<meta charset="utf-8">
+<link rel="stylesheet" type="text/css" href="css/bootstrap.min.css">
+<style>
+.forma {text-align:center;}
+#resultado{font-size:1.3em; padding-left:1.5em;}
+.entrada{margin:1em 0;}
+</style>
+<body>
+<div class="container">
+<div class="row introduccion">
+<div class="col-md-12">
+<h1>Diferencias entre valores en encuestas</h1>
+Esta es una implementación interactiva del ejercicio que <a href="http://twitter.com/gmonce">Gillermo Moncecchi</a> hizo en <a href="http://nbviewer.ipython.org/github/gmonce/datascience/blob/master/src/Mentiras.ipynb">este cuaderno de iPython</a> basándose en <a href="https://abcnews.go.com/images/PollingUnit/MOEFranklin.pdf">estas notas de Charles Franklin</a>. La idea, en breve, es que cuando se necesita comparar los valores de dos valores reportados en una encuesta (por ejemplo en encuestas electorales), para saber si un valor, de acuerdo a la encuesta, es estadísticamente mayor (o menor) que el otro no basta restarlos y comparar ese resultado con el margen de error que reporta la encuesta pues ese margen de error es para los valores, no para sus diferencias. Las diferencias se distribuyen de forma distinta que los valores puntuales y por tanto tienen otro margen de error que requiere un cálculo mas elaborado. Lo mismo pasa si se comparan dos valores a una misma pregunta en encuestas distintas (por ejemplo, la intención de voto de cierto candidato en dos encuestas y se quiere ver si mejoró o no). Esta pequeña aplicación considera ambos casos y calcula, dados los valores reportados en la encuesta o encuestas y el número de encuestados en las encuestas consideradas, si la diferencia entre los dos valores es estadísticamente significativa con un 95% de confianza. Para más detalles revise el cuaderno de Guillermo o las notas de Franklin.
+
+<h2>Instrucciones</h2>
+
+Registre los valores como números entre 0 y 1. Si en la encuesta los reportan como porcentajes, divida ese número por 100. En el caso de las dos encuestas, debe registrar el número de encuestados de ambas encuestas. En el caso de solo una encuesta, si la diferencia no es estadísticamente significativa la aplicación le indica cuál sería el mínimo número de encuestados para que una diferencia como la reportada lo fuera.
+
+</div>
+</div>
+<div class="row entrada">
+<div class="col-md-4">
+<form role="form">
+<select class="form-control" id="selecciontests">
+  <option value="0">Elija uno de los dos tests</options>
+  <option value="1">Diferencia entre dos valores de una pregunta en una misma encuesta</option>
+  <option value="2">Diferencia entre el valor de una pregunta en dos encuestas distintas</option>
+</select>
+</form>
+</div>
+<div class="col-md-8"></div>
+</div>
+<div class="row">
+<div class="col-md-4">
+<form class="form-horizontal forma unaencuesta" role="form" style="display: none;">
+<div class="form-group">
+    <label for="aprob1" class="col-md-6 control-label">Primer valor</label>
+    <div class="col-md-6"><input type="text" class="form-control" id="aprob1" placeholder="P1"></div>
+</div>
+<div class="form-group">
+    <label for="aprob2" class="col-md-6 control-label">Segundo valor</label>
+    <div class="col-md-6"><input type="text" class="form-control" id="aprob2" placeholder="P2"></div>
+</div>
+<div class="form-group">
+    <label for="aN" class="col-md-6 control-label">No. encuestados</label>
+    <div class="col-md-6"><input type="text" class="form-control" id="aN" placeholder="N"></div>
+</div>
+<button type="button" class="btn btn-info" onclick="calculate1()">Calcular</button>
+</form>
+
+<form class="form-horizontal forma dosencuestas" role="form" style="display: none;">
+<div class="form-group">
+    <label for="bprob1" class="col-md-6 control-label">Primer valor</label>
+    <div class="col-md-6"><input type="text" class="form-control" id="bprob1" placeholder="P1"></div>
+  </div>
+  <div class="form-group">
+    <label for="bprob2" class="col-md-6 control-label">Segundo valor</label>
+    <div class="col-md-6"><input type="text" class="form-control" id="bprob2" placeholder="P2"></div>
+  </div>
+  <div class="form-group">
+    <label for="bN1" class="col-md-6 control-label">No. encuestados 1</label>
+    <div class="col-md-6"><input type="text" class="form-control" id="bN1" placeholder="N1"></div>
+  </div>
+  <div class="form-group">
+    <label for="bN2" class="col-md-6 control-label">No. encuestados 2</label>
+    <div class="col-md-6"><input type="text" class="form-control" id="bN2" placeholder="N2"></div>
+  </div>
+  <button type="button" class="btn btn-info" onclick="calculate2()">Calcular</button>
+</form>
+</div>
+<div class="col-md-8"><div id="resultado"></div></div>
+</div>
+</div>
+<script type="text/javascript" src="http://d3js.org/queue.v1.min.js"></script>
+<script type="text/javascript" src="http://d3js.org/d3.v3.min.js"></script>
+<script type="text/javascript" src="http://d3js.org/topojson.v1.min.js"></script>
+<script type="text/javascript" src="http://code.jquery.com/jquery-1.11.0.min.js"></script>
+<script type="text/javascript" src="js/bootstrap.min.js"></script>
+<script type="text/javascript" src="js/franklin.js"></script>
